@@ -2,6 +2,7 @@ package com.BankDomain.contorller;
 
 import com.BankDomain.dto.AccountDTO;
 import com.BankDomain.entity.Account;
+import com.BankDomain.payloads.ApiResponse;
 import com.BankDomain.service.AccountService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,9 +32,10 @@ public class AccountController {
 
         private final AccountService accountService;
 
-        @PostMapping
-        public ResponseEntity<Account> createNewAccount(@Valid @RequestBody  AccountDTO dto){
-            return ResponseEntity.ok(accountService.createAccount(dto));
+        @PostMapping("/create")
+        public ResponseEntity<ApiResponse<Account>> createNewAccount(@Valid @RequestBody  AccountDTO dto){
+            Account created = accountService.createAccount(dto);
+            return ResponseEntity.ok(ApiResponse.successMessage("Account Created : ",created));
         }
 
         @GetMapping("/{accountNumber}/balance")
@@ -59,8 +61,8 @@ public class AccountController {
     }
     @Transactional
     @DeleteMapping("/remove/{accountNumber}")
-    public ResponseEntity<String> deleteAccount(@PathVariable String accountNumber){
+    public ResponseEntity<ApiResponse<String>> deleteAccount(@PathVariable String accountNumber){
             accountService.deleteAccount(accountNumber);
-            return  ResponseEntity.ok("Account Removed From Bank with Id : "+accountNumber);
+            return  ResponseEntity.ok(ApiResponse.withoutData("Account Deleted Successfully : "));
     }
 }

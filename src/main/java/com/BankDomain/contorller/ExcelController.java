@@ -31,7 +31,7 @@ public class ExcelController {
         String timeStamp = LocalDateTime.now()
                 .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss"));
         //full file path
-        String fileName = timeStamp + "_accounts.xlsx";
+        String fileName = "AccountDetails_"+timeStamp + "_accounts.xlsx";
 
         String filePath = excelFolderPath + "/" +fileName;
 

@@ -1,8 +1,10 @@
 package com.BankDomain.entity;
 
 public enum AccountType {
-    SAVING,
+    SAVINGS,
     CURRENT,
     SALARY,
+    JOIN,
     FIXED_DEPOSIT;
+
 }
