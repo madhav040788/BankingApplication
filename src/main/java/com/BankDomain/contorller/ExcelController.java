@@ -29,9 +29,9 @@ public class ExcelController {
     public ResponseEntity<String> excelGenerate(){
         //Format currnet date
         String timeStamp = LocalDateTime.now()
-                .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss"));
+                .format(DateTimeFormatter.ofPattern("yyyyMMdd_HH:mm:ss"));
         //full file path
-        String fileName = "AccountDetails_"+timeStamp + "_accounts.xlsx";
+        String fileName = timeStamp + "_accounts.xlsx";
 
         String filePath = excelFolderPath + "/" +fileName;
 

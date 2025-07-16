@@ -30,6 +30,13 @@ public class ExcelReportService {
     @Autowired
     private AccountRepository accountRepository;
 
+
+    public String generateExcelAndReturnPath(String filePath) throws IOException {
+        generateExcel(filePath);
+        return filePath;
+    }
+
+
     public void generateExcel(String filePath) throws IOException {
         List<Account> accounts= accountRepository.findAll();
 
@@ -61,17 +68,17 @@ public class ExcelReportService {
             headerStyle.setBorderRight(BorderStyle.THIN);
 
             //date format
-            XSSFCellStyle dateCellStyle = workbook.createCellStyle();
+            XSSFCellStyle dateFormatStyle = workbook.createCellStyle();
             XSSFCreationHelper createHelper = workbook.getCreationHelper();
-            dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd HH:mm:ss"));
+            dateFormatStyle.setDataFormat(createHelper.createDataFormat().getFormat("yyyy-MM-dd HH:mm:ss"));
 
             //data cell style
-             XSSFCellStyle dataStyle = workbook.createCellStyle();
-             dataStyle.setBorderBottom(BorderStyle.THIN);
-             dataStyle.setBorderRight(BorderStyle.THIN);
-             dataStyle.setBorderLeft(BorderStyle.THIN);
-             dataStyle.setBorderBottom(BorderStyle.THIN);
-             dataStyle.setWrapText(true);
+             XSSFCellStyle dataCellStyle = workbook.createCellStyle();
+             dataCellStyle.setBorderBottom(BorderStyle.THIN);
+             dataCellStyle.setBorderRight(BorderStyle.THIN);
+             dataCellStyle.setBorderLeft(BorderStyle.THIN);
+             dataCellStyle.setBorderBottom(BorderStyle.THIN);
+             dataCellStyle.setWrapText(true);
 
              //Header
             XSSFRow headerRow = sheet.createRow(0);
@@ -87,18 +94,18 @@ public class ExcelReportService {
             for (Account acc : accounts) {
                 XSSFRow row = sheet.createRow(rowIndx++);
                 row.createCell(0).setCellValue(acc.getAccountNumber());
+                row.getCell(0).setCellStyle(dataCellStyle);
                 row.createCell(1).setCellValue(acc.getAccountHolderName());
+                row.getCell(1).setCellStyle(dataCellStyle);
                 row.createCell(2).setCellValue(acc.getAccountType().toString());
+                row.getCell(2).setCellStyle(dataCellStyle);
                 row.createCell(3).setCellValue(acc.getBalance().doubleValue());
-
-                XSSFCell dateCell = row.createCell(4);
-                dateCell.setCellValue(Timestamp.valueOf(acc.getCreatedAt()));
-                dateCell.setCellStyle(dateCellStyle);
+                row.getCell(3).setCellStyle(dataCellStyle);
+                row.createCell(4).setCellValue(Timestamp.valueOf(acc.getCreatedAt()));
+                row.getCell(4).setCellStyle(dateFormatStyle);
                 row.createCell(5).setCellValue(acc.isActive() ? "Yes" : "No");
+                row.getCell(5).setCellStyle(dataCellStyle);
 
-                for (int i = 0; i < header.length; i++) {
-                    row.getCell(i).setCellStyle(dateCellStyle);
-                }
             }
             //auto-size column
              for (int i = 0; i < header.length;i++){
