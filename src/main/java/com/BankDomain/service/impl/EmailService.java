@@ -1,7 +1,9 @@
 package com.BankDomain.service.impl;
 
 import jakarta.mail.MessagingException;
+import java.util.List;
 
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -23,7 +25,7 @@ public class EmailService {
     private final JavaMailSender mailSender;
 
     public void sendMailWithAttachment(
-            String toEmail,
+            List<String> toEmailList,
             String subject
             ,String body,
             String filePath) {
@@ -31,17 +33,17 @@ public class EmailService {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
 
-            helper.setTo(toEmail);
+            helper.setTo(toEmailList.toArray(new String[0]));
             helper.setSubject(subject);
-            helper.setText(body);
+            helper.setText(body,true);// 'true' means it's HTML
 
             FileSystemResource file = new FileSystemResource(new File(filePath));
             helper.addAttachment(file.getFilename(),file);
 
             mailSender.send(mimeMessage);
-            logger.info("Email Sent successfully to {}",toEmail)    ;
+            logger.info("Email Sent successfully to {}",toEmailList)    ;
         } catch (MessagingException e) {
-            logger.error("Email Not Sent {}",toEmail,e);
+            logger.error("Email Not Sent {}",toEmailList,e);
             throw new RuntimeException(e);
         }
     }
